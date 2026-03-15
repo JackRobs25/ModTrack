@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "modtrack"
+version = "0.1.0"
+description = "Minimal ModTrack evaluation pipeline extraction"
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+authors = [{ name = "ModTrack Contributors" }]
+
+[project.scripts]
+modtrack = "modtrack.cli.main:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["modtrack*"]
+exclude = ["weights*", "datasets*", "results*"]
+
+[tool.uv.extra-build-dependencies]
+torchreid = ["numpy", "Cython", "gdown", "tensorboard"]

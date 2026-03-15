@@ -1,0 +1,18 @@
+numpy==1.26.4
+scipy==1.14.1
+matplotlib==3.9.2
+tqdm==4.66.5
+Pillow==10.4.0
+opencv-python==4.10.0.84
+torch==2.5.1
+torchvision==0.20.1
+ultralytics==8.3.74
+efficientnet-pytorch==0.7.1
+h5py==3.12.1
+scikit-learn==1.5.2
+motmetrics==1.4.0
+pandas==2.2.3
+chardet<6
+
+# TrackEval backend
+trackeval @ git+https://github.com/JonathonLuiten/TrackEval.git@master
