@@ -21,4 +21,14 @@ include = ["modtrack*"]
 exclude = ["weights*", "datasets*", "results*"]
 
 [tool.uv.extra-build-dependencies]
-torchreid = ["numpy", "Cython", "gdown", "tensorboard"]
+torchreid = [
+    "numpy",
+    "scipy",
+    "Cython",
+    "gdown",
+    "tensorboard",
+    "torch",
+    "torchvision",
+    "Pillow",
+    "opencv-python",
+]

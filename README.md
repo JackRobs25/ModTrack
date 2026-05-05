@@ -15,22 +15,26 @@ Multi-View Multi-Object Tracking (MV-MOT) aims to localize and maintain consiste
 uv python install 3.12
 uv venv --python 3.12 .venv
 source .venv/bin/activate
-uv pip install -r requirements.txt
-uv pip install -e .
+uv pip install -e . -r requirements.txt
 ```
 
 Python compatibility: `3.10`-`3.13` (PyTorch wheels are not available for `3.14` in this setup).
 
 Optional finetuning dependencies:
 ```bash
-uv pip install -r requirements-train.txt
+uv pip install -e . -r requirements-train.txt
 ```
 
 For `--mode semantic` and `--mode joint`, install `requirements-train.txt` as well (OSNet uses `torchreid`).
-If `torchreid` build isolation fails on your system, run:
+
+On systems with limited home or repository storage, put the virtualenv and uv cache on a larger filesystem:
 ```bash
-uv pip install numpy Cython gdown tensorboard
-uv pip install --no-build-isolation "torchreid @ git+https://github.com/KaiyangZhou/deep-person-reid.git@master"
+export MODTRACK_ENV_ROOT=/path/to/runtime/storage
+export UV_CACHE_DIR="${MODTRACK_ENV_ROOT}/.uv-cache"
+uv python install 3.12
+uv venv --python 3.12 "${MODTRACK_ENV_ROOT}/.venv"
+source "${MODTRACK_ENV_ROOT}/.venv/bin/activate"
+uv pip install -e . -r requirements-train.txt
 ```
 
 ## Components

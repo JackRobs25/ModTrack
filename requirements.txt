@@ -13,6 +13,8 @@ scikit-learn==1.5.2
 motmetrics==1.4.0
 pandas==2.2.3
 chardet<6
+pycocotools==2.0.11
+tabulate==0.10.0
 
 # TrackEval backend
 trackeval @ git+https://github.com/JonathonLuiten/TrackEval.git@master
