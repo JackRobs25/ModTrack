@@ -12,29 +12,51 @@ Multi-View Multi-Object Tracking (MV-MOT) aims to localize and maintain consiste
 
 ## Installation (uv)
 ```bash
-uv python install 3.12
-uv venv --python 3.12 .venv
-source .venv/bin/activate
-uv pip install -e . -r requirements.txt
+export MODTRACK_ENV_ROOT=/path/to/modtrack-env
+export UV_CACHE_DIR="${MODTRACK_ENV_ROOT}/.uv-cache"
+export UV_LINK_MODE=copy
+uv python install 3.9.21
+mkdir -p "${MODTRACK_ENV_ROOT}"
+uv venv --python 3.9.21 "${MODTRACK_ENV_ROOT}/.venv_uv"
+source "${MODTRACK_ENV_ROOT}/.venv_uv/bin/activate"
+uv pip install -r requirements.txt
+uv pip install -e .
 ```
 
-Python compatibility: `3.10`-`3.13` (PyTorch wheels are not available for `3.14` in this setup).
+Paper reproduction environment:
+- Python: `3.9.21`
+- PyTorch: `2.8.0`
+- TorchVision: `0.23.0`
+- Ultralytics: `8.3.218`
+- OpenCV: `4.11.0`
+- TrackEval: `12c8791b303e0a0b50f753af204249e622d0281a`
+- torchreid: `0.2.5`
+
+General code compatibility is `3.9`-`3.13`, but use Python `3.9.21` for reproducing the paper tables. PyTorch wheels are not available for `3.14` in this setup.
 
 Optional finetuning dependencies:
 ```bash
-uv pip install -e . -r requirements-train.txt
+uv pip install -r requirements-train.txt
+uv pip install -e .
 ```
 
 For `--mode semantic` and `--mode joint`, install `requirements-train.txt` as well (OSNet uses `torchreid`).
+If `torchreid` build isolation fails on your system, run:
+```bash
+uv pip install numpy scipy Cython gdown tensorboard torch torchvision Pillow opencv-python
+uv pip install --no-build-isolation torchreid==0.2.5
+```
 
-On systems with limited home or repository storage, put the virtualenv and uv cache on a larger filesystem:
 ```bash
 export MODTRACK_ENV_ROOT=/path/to/runtime/storage
 export UV_CACHE_DIR="${MODTRACK_ENV_ROOT}/.uv-cache"
-uv python install 3.12
-uv venv --python 3.12 "${MODTRACK_ENV_ROOT}/.venv"
-source "${MODTRACK_ENV_ROOT}/.venv/bin/activate"
-uv pip install -e . -r requirements-train.txt
+export UV_LINK_MODE=copy
+uv python install 3.9.21
+mkdir -p "${MODTRACK_ENV_ROOT}"
+uv venv --python 3.9.21 "${MODTRACK_ENV_ROOT}/.venv_uv"
+source "${MODTRACK_ENV_ROOT}/.venv_uv/bin/activate"
+uv pip install -r requirements-train.txt
+uv pip install -e .
 ```
 
 ## Components

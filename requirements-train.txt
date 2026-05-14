@@ -5,5 +5,5 @@ numpy==1.26.4
 gdown>=5.2.0
 tensorboard>=2.18.0
 
-# OSNet training backend
-torchreid @ git+https://github.com/KaiyangZhou/deep-person-reid.git@master
+# OSNet backend pinned to the paper-reproduction environment.
+torchreid==0.2.5
