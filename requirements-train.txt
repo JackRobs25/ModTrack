@@ -1,3 +1,4 @@
+# Also required for semantic/joint evaluation (OSNet), not only finetuning.
 -r requirements.txt
 wandb==0.19.8
 Cython>=3.0

@@ -11,53 +11,45 @@ ModTrack is a research-oriented codebase for multi-camera BEV tracking evaluatio
 Multi-View Multi-Object Tracking (MV-MOT) aims to localize and maintain consistent identities of objects observed by multiple sensors. This task is challenging, as viewpoint changes and occlusion disrupt identity consistency across views and time. Recent end-to-end approaches address this by jointly learning 2D Bird's Eye View (BEV) representations and identity associations, achieving high tracking accuracy. However, these methods offer no principled uncertainty accounting and remain tightly coupled to their training configuration, limiting generalization across sensor layouts, modalities, or datasets without retraining. We propose ModTrack, a modular MV-MOT system that matches end-to-end performance while providing cross-modal, sensor-agnostic generalization and traceable uncertainty. ModTrack confines learning methods to just the \textit{Detection and Feature Extraction} stage of the MV-MOT pipeline, performing all fusion, association, and tracking with closed-form analytical methods. Our design reduces each sensor's output to calibrated position-covariance pairs $(\mathbf{z}, R)$; cross-view clustering and precision-weighted fusion then yield unified estimates $(\hat{\mathbf{z}}, \hat{R})$ for identity assignment and temporal tracking. A feedback-coupled, identity-informed Gaussian Mixture Probability Hypothesis Density (GM-PHD) filter with HMM motion modes uses these fused estimates to maintain identities under missed detections and heavy occlusion. ModTrack achieves 95.5 IDF1 and 91.4 MOTA on \textit{WildTrack}, surpassing all prior modular methods by over 21 points and rivaling the state-of-the-art end-to-end methods while providing deployment flexibility they cannot. Specifically, the same tracker core transfers unchanged to \textit{MultiviewX} and \textit{RadarScenes}, with only perception-module replacement required to extend to new domains and sensor modalities.
 
 ## Installation (uv)
+
+Use Python **3.9.21** and the pinned dependencies below for paper reproduction.
+Run these commands from the repository root. This installs the dependencies for all evaluation modes, including OSNet
+for `semantic` and `joint`, as well as optional finetuning. This is the validated
+Linux/NVIDIA GPU setup.
+
 ```bash
 export MODTRACK_ENV_ROOT=/path/to/modtrack-env
 export UV_CACHE_DIR="${MODTRACK_ENV_ROOT}/.uv-cache"
 export UV_LINK_MODE=copy
-uv python install 3.9.21
 mkdir -p "${MODTRACK_ENV_ROOT}"
+uv python install 3.9.21
 uv venv --python 3.9.21 "${MODTRACK_ENV_ROOT}/.venv_uv"
 source "${MODTRACK_ENV_ROOT}/.venv_uv/bin/activate"
-uv pip install -r requirements.txt
+
+# Install the CUDA 12.8 wheels explicitly, then their dependencies.
+uv pip install --no-deps --index-url https://download.pytorch.org/whl/cu128 \
+    'torch==2.8.0+cu128' 'torchvision==0.23.0+cu128'
+uv pip install -r requirements.txt setuptools wheel Cython gdown tensorboard
+
+# torchreid's build imports its runtime dependencies, installed above.
+uv pip install --no-build-isolation -r requirements-train.txt
 uv pip install -e .
+uv pip check
+uv pip freeze > "${MODTRACK_ENV_ROOT}/requirements-resolved.txt"
 ```
 
 Paper reproduction environment:
 - Python: `3.9.21`
-- PyTorch: `2.8.0`
-- TorchVision: `0.23.0`
+- PyTorch: `2.8.0+cu128`
+- TorchVision: `0.23.0+cu128`
 - Ultralytics: `8.3.218`
-- OpenCV: `4.11.0`
+- OpenCV package: `opencv-python==4.11.0.86`
 - TrackEval: `12c8791b303e0a0b50f753af204249e622d0281a`
 - torchreid: `0.2.5`
 
-General code compatibility is `3.9`-`3.13`, but use Python `3.9.21` for reproducing the paper tables. PyTorch wheels are not available for `3.14` in this setup.
-
-Optional finetuning dependencies:
-```bash
-uv pip install -r requirements-train.txt
-uv pip install -e .
-```
-
-For `--mode semantic` and `--mode joint`, install `requirements-train.txt` as well (OSNet uses `torchreid`).
-If `torchreid` build isolation fails on your system, run:
-```bash
-uv pip install numpy scipy Cython gdown tensorboard torch torchvision Pillow opencv-python
-uv pip install --no-build-isolation torchreid==0.2.5
-```
-
-```bash
-export MODTRACK_ENV_ROOT=/path/to/runtime/storage
-export UV_CACHE_DIR="${MODTRACK_ENV_ROOT}/.uv-cache"
-export UV_LINK_MODE=copy
-uv python install 3.9.21
-mkdir -p "${MODTRACK_ENV_ROOT}"
-uv venv --python 3.9.21 "${MODTRACK_ENV_ROOT}/.venv_uv"
-source "${MODTRACK_ENV_ROOT}/.venv_uv/bin/activate"
-uv pip install -r requirements-train.txt
-uv pip install -e .
-```
+The package supports Python 3.9-3.13, but this is the validated reproduction
+environment. The older Torch 2.5 / Ultralytics 8.3.74 stack does not reproduce
+the MultiviewX baseline.
 
 ## Components
 - Core evaluator pipeline centered on `evaluate_modtrack.py`
