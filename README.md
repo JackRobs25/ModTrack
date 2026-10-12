@@ -94,7 +94,7 @@ ModTrack auto-discovers these paths. No weight path CLI flags are required.
 
 ## Pretrained Weights
 Download pretrained weights:
-N/A (to maintain anonymity)
+https://drive.google.com/drive/folders/10zCKjJucirRhgumUdd6mOkcOonCscKmZ?usp=sharing
 
 ## Evaluation
 Run evaluation with only dataset and mode:
